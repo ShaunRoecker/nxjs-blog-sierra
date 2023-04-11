@@ -9,10 +9,11 @@ import { CMS_NAME } from '../lib/constants'
 import Post from '../interfaces/post'
 
 type Props = {
-  allPosts: Post[]
+  allPosts: Post[],
+  githubName: string,
 }
 
-export default function Index({ allPosts }: Props) {
+export default function Index({ allPosts, githubName }: Props) {
   const heroPost = allPosts[0]
   const morePosts = allPosts.slice(1)
   return (
@@ -23,6 +24,7 @@ export default function Index({ allPosts }: Props) {
         </Head>
         <Container>
           <Intro />
+          <h1>{githubName}</h1>
           {heroPost && (
             <HeroPost
               title={heroPost.title}
@@ -50,7 +52,12 @@ export const getStaticProps = async () => {
     'excerpt',
   ])
 
+  const response = await fetch("https://api.github.com/users/shaunroecker")
+  const data = await response.json()
+  const githubName = data.name
+
+
   return {
-    props: { allPosts },
+    props: { allPosts, githubName },
   }
 }
